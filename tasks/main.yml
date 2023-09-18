@@ -1,0 +1,18 @@
+---
+- name: >-
+    decrypt {{ systemd_credential_name | to_json }}
+    in systemd's credential store
+  ansible.builtin.command:
+    argv: [systemd-creds, decrypt,
+      &path '/etc/credstore.encrypted/{{ systemd_credential_name }}']
+  failed_when: false
+  changed_when: false
+  register: _decrypt
+- name: >-
+    create / update {{ systemd_credential_name | to_json }}
+    in systemd' credentials store
+  ansible.builtin.command:  # https://systemd.io/CREDENTIALS/
+    stdin: '{{ systemd_credential_content }}'
+    stdin_add_newline: false
+    argv: [systemd-creds, encrypt, --with-key, host+tpm2, -, *path]
+  when: _decrypt.stdout != systemd_credential_content
