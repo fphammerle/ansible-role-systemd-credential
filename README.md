@@ -8,3 +8,9 @@ Ansible role for storing secrets in systemd's [credential store](https://systemd
 systemd_credential_name: some-password
 systemd_credential_content: secret password
 ```
+
+## Optional Input Variables
+
+```yaml
+systemd_credential_key: …  # default: host+tpm2
+```

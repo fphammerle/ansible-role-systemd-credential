@@ -14,5 +14,11 @@
   ansible.builtin.command:  # https://systemd.io/CREDENTIALS/
     stdin: '{{ systemd_credential_content }}'
     stdin_add_newline: false
-    argv: [systemd-creds, encrypt, --with-key, host+tpm2, -, *path]
+    argv:
+    - systemd-creds
+    - encrypt
+    - --with-key
+    - '{{ systemd_credential_key }}'
+    - '-'
+    - *path
   when: _decrypt.stdout != systemd_credential_content
